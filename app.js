@@ -80,6 +80,25 @@ app.post("/add",async(req,res)=>{
     })
 })
 
+app.post("/view",(req,res)=>{
+    let token=req.headers.token
+    jwt.verify(token,"blog-app",(error,decoded)=>{
+        if (decoded && decoded.email) {
+            postModel.find().then(
+                (items)=>{
+                    res.json(items)
+                }
+            ).catch(
+                (error)=>{
+                    res.json({"status":"error"})
+                }
+            )
+        } else {
+            res.json({"status":"Invalid authentication"})
+        }
+    })
+})
+
 app.listen(8080,()=>{
     console.log("server started")
 })
